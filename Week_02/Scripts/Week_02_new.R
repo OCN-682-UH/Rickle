@@ -9,9 +9,7 @@ library(here)
 ### Read in my data
 weightdata<-read_csv(here("Week_02","Data","weightdata.csv"))
 
-### Data Analysis
+### Data Analysis 
 head(weightdata) # looks at top 6 lines of data
 tail(weightdata) # looks at the bottom 6 lines
 view(weightdata) # shows entire data set
-
-
