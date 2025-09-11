@@ -10,7 +10,7 @@ library(tidyverse)
 glimpse(penguins)
 
 ### Data
-# Start with penguin dataframe, mapp bill depth to the x-axis
+# Start with penguin dataframe, map bill depth to the x-axis
 ggplot(data=penguins,
        mapping = aes (x = bill_depth_mm,
                       y = bill_length_mm,
