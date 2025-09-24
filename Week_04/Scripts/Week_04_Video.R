@@ -30,7 +30,7 @@ chem_long <- chem_clean %>%
                names_to = "Variables",
                values_to = "Values")
 
-chem_long %>% ## mean, varianve, and standard deviation for site
+chem_long %>% ## mean, variance, and standard deviation for site
   group_by(Variables, Site) %>% ## to group by select variables
   summarise(Param_means = mean(Values, na.rm = TRUE), ## get mean
             Param_vars = var(Values, na.rm = TRUE), ## get variance
@@ -60,7 +60,7 @@ chem_wide <- chem_long %>%
 
 #################################################################################
 
-chem_clean <- chemical %>%
+chem_clean_wide <- chemical %>%
   drop_na() %>%
   separate(col = Tide_time,
            into = c("Tide","Time"),
