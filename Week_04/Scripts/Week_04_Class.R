@@ -3,6 +3,7 @@
 ### Week 4 practice
 
 ################################################################################
+###### Lecture Code
 
 ### libraries
 library(palmerpenguins)
@@ -32,8 +33,49 @@ penguins %>% ## to use penguins data
 
 penguins %>%
   group_by(island) %>%
-  summarise(mean_flipper = mean(flipper_length_mm, na.rm=TRUE),
-            min_flipper = min(flipper_length_mm, na.rm=TRUE))
+  drop_na(sex) %>%
+  summarise(mean_bill_length = mean(bill_length_mm, na.rm=TRUE),
+            min_flipper = max(bill_length_mm, na.rm=TRUE))
+penguins %>%
+  drop_na(sex) %>%
+  ggplot(aes(x = sex, y = flipper_length_mm)) +
+  geom_boxplot()
+ggsave(here("Week_04", "Output", "penguin_lecture.png")) ## saving the plot
 
-                
-            
+penguins %>% 
+  group_by(species, island, sex) %>% ## to evaluate summary statistics based on selected variables
+  summarise(Param_means = mean(body_mass_g, na.rm = TRUE),
+            Param_vars = var(body_mass_g, na.rm = TRUE) 
+  write_csv(here("Week_04","Output","HW_summary.csv"))
+
+################################################################################
+
+###### Lecture HW
+
+### libraries
+library(palmerpenguins)
+library(tidyverse)
+library(here)
+library(ggplot2)
+
+### load data
+glimpse(penguins)
+
+### analysis
+penguins_female <- filter(.data = penguins, sex == "female") %>%
+  mutate(log_mass = log(body_mass_g))
+
+penguins_female %>%
+select(c("island", "sex", "log_mass"))
+
+ggplot(data = penguins_female, ## plotting using penguins data
+       mapping = aes(x = species, 
+                     y = log_mass, ## setting the x and y variables
+                     color = species)) + ## setting the color by species
+  geom_boxplot(alpha = 0.75) + ## displaying via boxplot
+  geom_jitter() + ## overlaying jitter points
+  labs(title = "Female Body Mass According to Species",
+       x = "Species",
+       y = "Body Mass (g)")  ## setting title and axis labels
+ggsave(here("Week_04", "Output", "penguin_lecture_hw.png")) ## saving the plot
+        
