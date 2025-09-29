@@ -10,27 +10,22 @@ library(tidyverse)
 library(here)
 library(ggthemes)
 
-chemical <- read.csv("/Users/samantharickle/Desktop/R Stuff/Rickle/Week_04/Data/chemicaldata_maunalua.csv")
-
+chemical <- read_csv(here("Week_04/Data/chemicaldata_maunalua.csv"))
 chem_clean_hw <- chemical %>%
   drop_na() %>% ## to filter out NAs, BUT can also filter(complete.cases(.))
   separate(col = Tide_time, ## separating Tide_time into 2 columns 
            into = c("Tide","Time"), ## named Tide and Time
-           sep = "_") ## tells us where the data is separating
-
-chem_long_hw2 <- chem_clean %>% 
+           sep = "_") %>% ## tells us where the data is separating
   pivot_longer(cols = Temp_in:percent_sgd, ## to select columns to be pivoted
                names_to = "Variables", ## to rename this column
-               values_to = "Values") ## to rename corresponding output column
-
-chem_long_hw2 %>% 
-  group_by(Variables, Zone, Season) %>% ## to evaluate summary statistics based on Variables, Zone and Season
+               values_to = "Values") %>% ## to rename corresponding output column
+  group_by(Variables, Values, Site) %>% ## to evaluate summary statistics based on Variables, Zone and Season
   summarise(Param_means = mean(Values, na.rm = TRUE),
             Param_vars = var(Values, na.rm = TRUE), 
             Param_sd = sd(Values, na.rm = TRUE)) %>%
   write_csv(here("Week_04","Output","HW_summary.csv"))
 
-chem_long_plot <- chem_long_hw2 %>% 
+chem_long_plot <- chem_clean_hw %>% 
   ggplot(aes(x = Site, y = Values)) + ## plotting site vs values
   geom_jitter(alpha = 0.5) + ## to add jitter points under violin
   geom_violin(alpha = 0.80) + ## setting plot type to violin
