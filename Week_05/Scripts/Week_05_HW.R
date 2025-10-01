@@ -40,4 +40,4 @@ ggplot(combined_cond_depth, aes(x = minute, y = value)) + ## plotting minute vs 
         y = "Averaged Value",
         title = "Average Depth, Salinity, and Temperature Measured per Minute") ## changing labels and title
 
-
+ggsave(here("Week_05", "Output", "Avg_Depth_Salinity_Temperature.png"))
