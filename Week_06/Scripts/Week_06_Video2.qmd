@@ -1,7 +1,7 @@
 ---
 title: "Week 06 Video2"
 author: "SZR"
-format: gfm
+format: gfm ## to save as a file that can be viewed in github
 prefer-html: true
 
 ### didnt run knitr below because it is not saving properly and messing up while rendering
