@@ -1,0 +1,69 @@
+---
+title: "Week 06 Video2"
+author: "SZR"
+format: gfm
+prefer-html: true
+
+### didnt run knitr below because it is not saving properly and messing up while rendering
+### gives the error "Error in -title : invalid argument to unary operator"
+
+## knitr:
+##  opts_chunk:
+##    fig.path: "../Output/" 
+---
+
+
+## Introduction
+Today, we are learning about how to work with figures
+
+## Libraries
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+library(kableExtra)
+```
+
+# Plot
+```{r}
+#| warning: false
+#| out-width: "70%"
+#| fig-align: "center"
+#| label: fig-penguin2
+#| fig-cap: "This is a figure showing bill length by bill depth"
+
+penguins %>%
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species))+
+  geom_point()
+```
+When you look at @fig-penguin2 you can see a positive relationship
+
+Practice manually inputting a table:
+
+| Time  | Session | Topic    |
+|:------|:-------:|---------:|
+| _left_ | _center_| _right_ |
+| 01:00  | 1       | Anatomy |
+| 01:50  |         | *Break* |
+| 02:00  | 2       | Tables  |
+| 02:45  |         | *Break* |
+
+```{r}
+#| warning: false
+#| message: false
+#| label: tbl-penguin
+#| tbl-cap: "My penguin table"
+
+penguins %>%
+  group_by(species) %>%
+  summarise(billmean = mean(bill_length_mm, na.rm = TRUE)) %>%
+  kbl()  %>% ## this is a kable table
+  kable_classic() %>% ## to make a kable theme
+  row_spec(2, bold = TRUE, color = "white", background = "red") %>% ## highlighting row 2
+  kable_styling(full_width = FALSE) ## make it not so big
+```
+
+@tbl-penguin has information on the mean bill length by species
