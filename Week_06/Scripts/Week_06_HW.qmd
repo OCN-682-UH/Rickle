@@ -1,0 +1,58 @@
+---
+title: "Week 06 HW"
+author: "SZR"
+format: html
+---
+
+## Introduction
+For this homework I am practicing working with *Quarto*.
+
+This document shows:
+* a figure of body mass by flipper length by island
+* a table of average body mass and flipper length of only the Adelie species
+
+## Libraries
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+library(kableExtra)
+library(dplyr)
+```
+
+# Plotting
+
+Plotting **body mass** by **flipper length** according to **species** and faceted by **island**
+```{r}
+#| warning: false
+#| fig-align: "center"
+#| label: fig-penguin-sp-isl
+#| fig-cap: "This figure shows body mass by flipper length for each species according to island"
+penguins %>%
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm, color = species))+
+  geom_point()+
+  facet_grid(. ~ island)
+```
+@fig-penguin-sp-isl shows a positive relationship between **body mass** and **flipper length** among all 3 species and islands. Chinstrap and Adelie appear to be a similar size overall with Gentoo being much larger. 
+
+```{r}
+#| warning: false
+#| message: false
+#| label: tbl-penguin-adelie
+#| tbl-cap: "Adelie by Island table"
+#| 
+filtered_penguins <- filter(penguins, species == "Adelie")
+         
+filtered_penguins %>%
+  group_by(island) %>%
+  summarise(mean_mass = mean(body_mass_g, na.rm = TRUE),
+            mean_flipper = mean(flipper_length_mm, na.rm = TRUE)) %>%
+  kbl()  %>% ## this is a kable table
+  kable_classic() %>% ## to make a kable theme
+  kable_styling(full_width = FALSE)
+```
+@tbl-penguin-adelie comparing the **mean mass** and **mean flipper length** of only the **Adelie penguins** sorted by island.
+
