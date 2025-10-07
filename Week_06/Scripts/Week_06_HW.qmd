@@ -16,7 +16,7 @@ This document shows:
 ```{r}
 #| message: false
 #| warning: false
-
+  
 library(tidyverse)
 library(here)
 library(palmerpenguins)
