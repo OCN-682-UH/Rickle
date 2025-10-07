@@ -1,14 +1,15 @@
 ---
 title: "Week 06 HW"
 author: "SZR"
-format: html
+format: gfm ## to save as a file that can be viewed in github
+prefer-html: true
 ---
 
 ## Introduction
 For this homework I am practicing working with *Quarto*.
 
-This document shows:
-* a figure of body mass by flipper length by island
+This document shows:  
+* a figure of body mass by flipper length by island  
 * a table of average body mass and flipper length of only the Adelie species
 
 ## Libraries
