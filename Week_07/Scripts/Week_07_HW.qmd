@@ -1,0 +1,24 @@
+---
+title: "Week_07_HW"
+author: "SZR"
+format: html
+---
+
+```{r}
+library(devtools)
+library("ggmap")
+devtools::install_github("dkahle/ggmap", ref = "tidyup", force=TRUE)
+
+#Set your API Key
+## ggmap::register_google(key = "SET YOUR KEY HERE")
+
+```
+
+```{r}
+MSB <- geocode("1000 Pope Rd, Honolulu, Hawaii")
+get_map(location = c(lon = MSB$lon, lat = MSB$lat),
+        zoom = 12) %>%
+  ggmap() +
+  geom_point(aes(x = MSB$lon, y = MSB$lat))
+```
+

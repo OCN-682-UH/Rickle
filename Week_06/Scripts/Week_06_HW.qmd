@@ -9,8 +9,8 @@ prefer-html: true
 For this homework I am practicing working with *Quarto*.
 
 This document shows:  
-* a figure of body mass by flipper length by island  
-* a table of average body mass and flipper length of only the Adelie species
+- a figure of body mass by flipper length by island  
+- a table of average body mass and flipper length of only the Adelie species
 
 ## Libraries
 ```{r}
