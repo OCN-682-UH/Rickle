@@ -1,24 +1,147 @@
 ---
 title: "Week_07_HW"
 author: "SZR"
-format: html
+format: gfm
+prefer-html: true
 ---
 
+## Homework script for **Week 7**
+
+
+### Loading Libraries 
+
 ```{r}
-library(devtools)
-library("ggmap")
-devtools::install_github("dkahle/ggmap", ref = "tidyup", force=TRUE)
-
-#Set your API Key
-## ggmap::register_google(key = "SET YOUR KEY HERE")
-
+library(tidytuesdayR)
+library(maps)
+library(mapproj)
+library(mapdata)
+library(ggmap)
+library(ggcats)
+library(ggplot2)
+library(dplyr)
 ```
 
+
+### Data Processing    
+-Creating a vector with only **UK data** from map_data  
+-Creating a vector with **averaged cat data** from uk_cats  
+
 ```{r}
-MSB <- geocode("1000 Pope Rd, Honolulu, Hawaii")
-get_map(location = c(lon = MSB$lon, lat = MSB$lat),
-        zoom = 12) %>%
-  ggmap() +
-  geom_point(aes(x = MSB$lon, y = MSB$lat))
+
+world <- map_data("world")
+uk <- world %>%
+  filter(region == "UK")
+tuesdata <- tidytuesdayR::tt_load('2023-01-31')
+cats_uk <- tuesdata$cats_uk
+
+cat_avg <- cats_uk %>%
+  group_by(tag_id) %>%
+  summarise(
+    mean_long = mean(location_long, na.rm = TRUE),
+    mean_lat  = mean(location_lat, na.rm = TRUE))
+```
+
+### Plotting   
+-A **map of the UK**, zooming in on the south east portion   
+-With **cat_avg layered** and different cats in different colors  
+
+
+```{r}
+
+ggplot() +
+  geom_polygon(
+    data = uk,
+    aes(x = long, y = lat, group = group),
+    fill = "darkgreen",
+    color = "black"
+  ) +
+  geom_point(
+    data = cat_avg,
+    aes(x = mean_long, y = mean_lat, color = factor(tag_id)),
+    size = 1.5
+  ) +
+  coord_quickmap(xlim = c(-6, -3), ylim = c(50, 52)) +
+  theme_minimal() +
+  theme(panel.background = element_rect(fill = "lightblue"))+
+  guides(color = "none")
+```
+
+-15 cats selected plotted selected based on location (just wanted them spread out)    
+-Each cat meme represents the average location of a different cat  
+
+```{r}
+#| message: false
+#| warning: false
+#| echo: false
+
+ggplot() +
+  geom_polygon(
+    data = uk,
+    aes(x = long, y = lat, group = group),
+    fill = "darkgreen",
+    color = "black") +
+  coord_quickmap(xlim = c(-6, -4), ylim = c(50, 51)) +
+  theme_minimal() +
+  theme(panel.background = element_rect(fill = "lightblue")) +
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "SmokeyLongnose-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "nyancat"),
+    size = 1.5) +
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Skye-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "bongo"),
+    size = 1.5)+
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Amber-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "colonel"),
+    size = 1.5)+
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Lucy-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "grumpy"),
+    size = 1.5)+
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Casper-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "hipster"),
+    size = 1.5)+
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Wilfred-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "lil_bub"),
+    size = 1.5)+
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Siberia-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "maru"),
+    size = 1.5)+
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Guinness-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "mouth"),
+    size = 1.5)+
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Lightening Bugg-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "pop"),
+    size = 1.5)+
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Mifty-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "pop_close"),
+    size = 1.5)+
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Barney-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "pusheen"),
+    size = 1.5)+
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Lady T-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "pusheen_pc"),
+    size = 1.5)+
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Missy-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "toast"),
+    size = 1.5)+
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Pussy-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "venus"),
+    size = 1.5)+
+  geom_cat(
+    data = cat_avg %>% filter(tag_id == "Jasper-Tag"),
+    aes(x = mean_long, y = mean_lat, cat = "shironeko"),
+    size = 1.5)
 ```
 

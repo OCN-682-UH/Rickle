@@ -57,6 +57,7 @@ ggplot()+
   guides(fill = FALSE)+
   theme(panel.background = element_rect(fill = "lightblue")) 
 ```
+
 # Making a **region specific plot**
 ```{r}
 CApop_county <- popdata %>%
