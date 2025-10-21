@@ -1,6 +1,10 @@
 # Frogs of Australia Good Plot Bad Plot
 SZR
 
+- [Loading Data and Data Cleaning](#loading-data-and-data-cleaning)
+- [Bad Plot](#bad-plot)
+- [Good Plot](#good-plot)
+
 ``` r
 library(here)
 ```
@@ -52,6 +56,8 @@ library(ggimage)
 
         theme_nothing
 
+# Loading Data and Data Cleaning
+
 ``` r
 tuesdata <- tidytuesdayR::tt_load('2025-09-02')
 ```
@@ -68,6 +74,13 @@ tuesdata <- tidytuesdayR::tt_load('2025-09-02')
 ``` r
 frogs <- tuesdata$frogID_data
 ```
+
+------------------------------------------------------------------------
+
+**Frog ID Data** is a set from the tidytuesday series and provides
+location data of different frog species across Australia.
+
+------------------------------------------------------------------------
 
 ``` r
 ## Downloading data and cleaning
@@ -103,7 +116,9 @@ my_colors4 <- qualitative_hcl(26, palette = "Set3")
 c_signifera <- readJPEG(here("Week_08", "Images","C.signifera.jpeg"))
 ```
 
-## Here is an example of a **BAD plot**
+# Bad Plot
+
+Here is an example of a **BAD plot**
 
 ``` r
 ggplot(data = frogs,
@@ -118,19 +133,21 @@ ggplot(data = frogs,
 
 ![](Good_Plot_Bad_Plot_files/figure-commonmark/unnamed-chunk-4-1.png)
 
-### This is a bad plot because
+This is a bad plot because
 
 - There are too many categories in x axis, making the species name
-  overlap and impossible to read.
+  overlap and impossible to read.  
 - Too much variation in y axis makes bars for uncommon species so small
-  they disappear.
-- Misspellings
-- Overall boring
+  they disappear.  
+- Misspellings  
+- Overall boring  
 - No frog pictures D:
 
 ![Kermit is stressed](https://pbs.twimg.com/media/By5GJbxCUAEO7xl.jpg)
 
-## Here is an example of a **GOOD plot**
+# Good Plot
+
+Here is an example of a **GOOD plot**
 
 ``` r
 ggmap(Australia) +
@@ -191,12 +208,13 @@ ggmap(Australia) +
 
 ![](Good_Plot_Bad_Plot_files/figure-commonmark/unnamed-chunk-5-1.png)
 
-### This is a good plot because
+This is a good plot because
 
-- The data is grouped by genus instead of species.
-- Lat/long data of each frog is layered on top of the map of Australia.
-- The colors correspond to each genus.
-- Data is ordered to less common species are on top.
+- The data is grouped by genus instead of species.  
+- Lat/long data of each frog is layered on top of the map of
+  Australia.  
+- The colors correspond to each genus.  
+- Data is ordered to less common species are on top.  
 - Frog pictures :D
 
 ![Kermit
