@@ -251,10 +251,10 @@ ggmap(Australia) +
 This is a good plot because
 
 - The data is grouped by genus instead of species.  
-- Lat/long data of each frog is layered on top of the map of
-  Australia.  
+- Lat/long data of each frog is layered on top of the map of Australia.
 - The colors correspond to each genus.  
 - Data is ordered to less common species are on top.  
+- The gif shows us plots of individual genera  
 - Frog pictures :D
 
 ![Kermit
