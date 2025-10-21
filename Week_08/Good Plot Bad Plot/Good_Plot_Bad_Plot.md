@@ -56,6 +56,11 @@ library(ggimage)
 
         theme_nothing
 
+``` r
+library(gganimate)
+library(patchwork)
+```
+
 # Loading Data and Data Cleaning
 
 ``` r
@@ -112,8 +117,6 @@ frogs <- frogs %>%
 my_colors <- distinctColorPalette(26) ## creating 26 color custom palette
 my_colors3 <- colorRampPalette(brewer.pal(12, "Paired"))(26) ## creating 26 color custom palette
 my_colors4 <- qualitative_hcl(26, palette = "Set3")
-
-c_signifera <- readJPEG(here("Week_08", "Images","C.signifera.jpeg"))
 ```
 
 # Bad Plot
@@ -207,6 +210,43 @@ ggmap(Australia) +
 ```
 
 ![](Good_Plot_Bad_Plot_files/figure-commonmark/unnamed-chunk-5-1.png)
+
+``` r
+ggmap(Australia) +
+  geom_point(
+    data = frogs %>%
+      arrange(desc(n_points)), ## plotting frog data in reverse n order (less frequent on top)
+    aes(
+      x = decimalLongitude,
+      y = decimalLatitude,
+      color = Genus ## color of points according to genus (too many species)
+    ),
+    alpha = 0.50, ## adjusting transparency
+    size = 1 ## adjusting the size of the points
+  ) +
+  transition_states(Genus, transition_length = 6, state_length = 4) +
+  ease_aes("sine-in-out") +
+  labs(title = 'Genus: {closest_state}') +
+  scale_color_manual(values = my_colors3) + ## using special brewer palette
+ theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_text(face = "bold"),
+    legend.text = element_text(size = 10),
+    legend.key.size = unit(0.4, "cm"),
+    legend.box = "horizontal",
+    axis.title.x = element_text(size = 15),
+    axis.title.y = element_text(size = 15),
+    plot.title = element_text(size = 14, face = "bold")
+  ) +
+  labs( ## adjusting labels
+    x = "Longitude",
+    y = "Latitude",
+  ) +
+  guides(color = guide_legend(override.aes = list(size = 3, alpha = 1)))
+```
+
+![](Good_Plot_Bad_Plot_files/figure-commonmark/unnamed-chunk-6-1.gif)
 
 This is a good plot because
 
