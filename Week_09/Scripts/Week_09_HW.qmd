@@ -26,6 +26,8 @@ intertidal_lat <- read_csv(here("Week_09", "Data", "intertidaldata_latitude.csv"
 
 Data processing
 ```{r}
+#| message: false
+
 intertidal <- intertidal %>%
   rename(
     algae_count = Algae,
@@ -45,10 +47,9 @@ intertidal_summary <- intertidal %>%
   summarise(across(where(is.numeric), sum, na.rm= TRUE)) %>%
   left_join(intertidal_lat, by = "Site") %>%
   clean_names() %>%
-  mutate(site = fct_reorder(site, latitude))
+  mutate(site = fct_reorder(site, latitude)) %>%
   arrange(desc(latitude))
 ```
-
 
 ```{r}
 intertidal_summary %>% 
