@@ -2,12 +2,11 @@
 title: "Week 11: Tidy Tuesday 1"
 author: "SZR"
 format: 
-  gfm:   # to save as a file that can be viewed in GitHub
+  html:
     toc: true
     toc-location: right
     toc-title: "Contents"
     code-fold: true
-prefer-html: true
 ---
 
 # Load Libraries
