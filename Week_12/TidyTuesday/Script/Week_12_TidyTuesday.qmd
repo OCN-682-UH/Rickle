@@ -65,6 +65,8 @@ htmlwidgets::saveWidget(
   widget = tb_interactive,
   file = here("Week_12", "TidyTuesday", "Output", "tb_interactive.html")
 )
+
+tb_interactive
 ```
 
 This bubble diagram shows Tuberculosis incidences versus mortality with bubbles representing countries, colors corresponding to broader regions, and point size showing population size. Specific information is shown when hovering over each point. 
