@@ -7,11 +7,6 @@ format:
     toc-location: right
     toc-title: "Contents"
     code-fold: true
-  gfm:
-    toc: true
-    toc-location: right
-    toc-title: "Contents"
-    code-fold: true
 ---
 
 # Load Libraries
@@ -77,7 +72,7 @@ flint_lead_levels <- plot_ly(combined) %>%
       "<br><b>VT Lead:</b> ", lead_vt, " ppb"
     )) %>%
   layout(
-    title = "Lead Levels by Sample (Interactive Comparison: MDEQ vs VT)",
+    title = "Lead Levels in Water of Flint Michigan: MDEQ vs VT",
     xaxis = list(title = "Sample ID"),
     yaxis = list(title = "Lead (ppb)"),
     hoverlabel = list(bgcolor = "white", font = list(size = 14)))
