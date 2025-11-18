@@ -59,7 +59,12 @@ tb_plot2023 <- ggplot(tb_2023, aes( ## plotting new incidences/100k rate versus 
   ) +
   theme_minimal()
 
-ggplotly(tb_plot2023, tooltip = "text") ## making it interactive
+tb_interactive <- ggplotly(tb_plot2023, tooltip = "text") ## making it interactive
+
+htmlwidgets::saveWidget(
+  widget = tb_interactive,
+  file = here("Week_12", "TidyTuesday", "Output", "tb_interactive.html")
+)
 ```
 
 This bubble diagram shows Tuberculosis incidences versus mortality with bubbles representing countries, colors corresponding to broader regions, and point size showing population size. Specific information is shown when hovering over each point. 
