@@ -5,7 +5,7 @@ account: szrickle
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 16111064
-bundleId: 11200088
+bundleId: 11203469
 url: https://szrickle.shinyapps.io/Week_11_Shiny/
 version: 1
 asMultiple: FALSE
