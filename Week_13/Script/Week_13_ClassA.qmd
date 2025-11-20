@@ -41,6 +41,7 @@ for (i in 1:length(years)){ # set up the for loop where i is the index
 #| message: false
 
 testdata<-read_csv(here("Week_13", "Data","011521_CT316_1pcal.csv"))
+
 CondPath<-here("Week_13", "Data", "cond_data")
 files <- dir(path = CondPath,pattern = ".csv")
 
