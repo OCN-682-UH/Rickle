@@ -1,0 +1,212 @@
+---
+title: "Frogs of Australia Good Plot Bad Plot"
+author: "SZR"
+format: 
+  gfm:   # to save as a file that can be viewed in GitHub
+    toc: true
+    toc-location: right
+    toc-title: "Contents"
+prefer-html: true
+---
+```{r}
+library(here)
+library(ggmap)
+library(ggplot2)
+library(tidyr)
+library(RColorBrewer)
+library(ggsci)
+library(Polychrome)
+library(randomcoloR)
+library(dplyr)
+library(colorspace)
+library(jpeg)
+library(ggimage)
+library(gganimate)
+library(patchwork)
+```
+
+# Loading Data and Data Cleaning
+
+
+
+```{r}
+tuesdata <- tidytuesdayR::tt_load('2025-09-02')
+frogs <- tuesdata$frogID_data
+```
+
+_____________________________________________________________________________
+
+**Frog ID Data** is a set from the tidytuesday series and provides location data of different frog species across Australia.
+
+_____________________________________________________________________________
+
+
+```{r}
+## Downloading data and cleaning
+
+Australia <- get_map("Australia", zoom = 4, maptype = "terrain")
+frogs <- frogs %>%
+  separate(col = scientificName, ## splitting full name into genus and species
+           into = c("Genus", "Species"),
+           sep = " ",
+           remove = FALSE,
+           extra = "merge")
+
+frogs <- frogs %>%
+  group_by(Species)%>%
+  mutate(n_points_sp =n()) %>%
+  group_by(Genus) %>%
+  mutate(n_points = n()) %>% ## creating new column with count (n) of each genus
+  arrange(n_points) %>% ## arrange in order of n
+  mutate(Genus = factor(Genus, levels = unique(Genus)))
+
+
+my_colors <- distinctColorPalette(26) ## creating 26 color custom palette
+my_colors3 <- colorRampPalette(brewer.pal(12, "Paired"))(26) ## creating 26 color custom palette
+my_colors4 <- qualitative_hcl(26, palette = "Set3")
+```
+
+# Bad Plot
+
+
+Here is an example of a **BAD plot**
+
+```{r}
+ggplot(data = frogs,
+       aes(x = scientificName, y = n_points_sp)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  xlab("Forg type") +
+  ylab("# of Froge") +
+  ggtitle("FROGS") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+This is a bad plot because  
+
+- There are too many categories in x axis, making the species name overlap and impossible to read.  
+- Too much variation in y axis makes bars for uncommon species so small they disappear.  
+- Misspellings   
+- Overall boring  
+- No frog pictures D:  
+
+
+![Kermit is stressed](https://pbs.twimg.com/media/By5GJbxCUAEO7xl.jpg)
+
+# Good Plot
+
+
+Here is an example of a **GOOD plot**
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| thematic: false
+ 
+ggmap(Australia) +
+  geom_image(
+    data = data.frame(x = 115, y = -43),
+    aes(x = x, y = y, image = here("Week_08", "Images", "C.signifera.jpeg")),
+    size = 0.25
+  ) +
+   geom_text(
+    data = data.frame(x = 115, y = -43 + 3.5),  # slightly above the image
+    aes(x = x, y = y),
+    label = "Most common species: Crinia signifera",
+    color = "black",
+    size = 3
+  ) +
+  geom_image(
+    data = data.frame(x = 130, y = -43),
+    aes(x = x, y = y, image = here("Week_08", "Images", "L.peronii.jpg")),
+    size = 0.25
+  ) +
+   geom_text(
+    data = data.frame(x = 130, y = -43 + 4.25),  # slightly above the image
+    aes(x = x, y = y),
+    label = "Most common genus: Litoria",
+    color = "black",
+    size = 3
+  ) +
+  geom_point(
+    data = frogs %>%
+      arrange(desc(n_points)), ## plotting frog data in reverse n order (less frequent on top)
+    aes(
+      x = decimalLongitude,
+      y = decimalLatitude,
+      color = Genus ## color of points according to genus (too many species)
+    ),
+    alpha = 0.50, ## adjusting transparency
+    size = 1 ## adjusting the size of the points
+  ) +
+  scale_color_manual(values = my_colors3) + ## using special brewer palette
+ theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_text(face = "bold"),
+    legend.text = element_text(size = 10),
+    legend.key.size = unit(0.4, "cm"),
+    legend.box = "horizontal",
+    axis.title.x = element_text(size = 15),
+    axis.title.y = element_text(size = 15),
+    plot.title = element_text(size = 14, face = "bold")
+  ) +
+  labs( ## adjusting labels
+    x = "Longitude",
+    y = "Latitude",
+    title = "Records of Frog Genera in Australia"
+  ) +
+  guides(color = guide_legend(override.aes = list(size = 3, alpha = 1)))
+```
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| 
+ggmap(Australia) +
+  geom_point(
+    data = frogs %>%
+      arrange(desc(n_points)), ## plotting frog data in reverse n order (less frequent on top)
+    aes(
+      x = decimalLongitude,
+      y = decimalLatitude,
+      color = Genus ## color of points according to genus (too many species)
+    ),
+    alpha = 0.50, ## adjusting transparency
+    size = 1 ## adjusting the size of the points
+  ) +
+  transition_states(Genus, transition_length = 6, state_length = 4) +
+  ease_aes("sine-in-out") +
+  labs(title = 'Genus: {closest_state}') +
+  scale_color_manual(values = my_colors3) + ## using special brewer palette
+ theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_text(face = "bold"),
+    legend.text = element_text(size = 10),
+    legend.key.size = unit(0.4, "cm"),
+    legend.box = "horizontal",
+    axis.title.x = element_text(size = 15),
+    axis.title.y = element_text(size = 15),
+    plot.title = element_text(size = 14, face = "bold")
+  ) +
+  labs( ## adjusting labels
+    x = "Longitude",
+    y = "Latitude",
+  ) +
+  guides(color = guide_legend(override.aes = list(size = 3, alpha = 1)))
+```
+
+
+This is a good plot because  
+
+- The data is grouped by genus instead of species.  
+- Lat/long data of each frog is layered on top of the map of Australia. 
+- The colors correspond to each genus.  
+- Data is ordered to less common species are on top.  
+- The gif shows us plots of individual genera  
+- Frog pictures :D
+
+
+![Kermit approves](https://media.tenor.com/M670xvRNko0AAAAM/kermit-cheering.gif)

@@ -1,0 +1,42 @@
+---
+title: "Week 7 Video"
+author: "SZR"
+format: html
+---
+
+## Working with ggmaps
+
+Load libraries
+```{r}
+library(ggmap)
+library(ggspatial)
+library(here)
+library(tidyverse)
+```
+
+Load data
+```{r}
+chemdata <- read.csv(here("Week_07", "Data", "chemicaldata_maunalua.csv"))
+```
+
+Making a map of Oahu
+```{r}
+Oahu <- get_map("Oahu") ## making a data frame of Oahu
+ggmap(Oahu)
+```
+
+Making a map of Wailupe
+```{r}
+wp <- data.frame(lon = -157.7621, lat = 21.27427) ## making a data frame that centers around these coordinates
+wpmap <- get_map(wp, zoom = 15, maptype = "satellite")
+ggmap(wpmap) +
+  geom_point(data = chemdata,
+             aes(x = Long, y = Lat, color = Salinity),
+             size = 4) + ## layering chemdata points on top of map
+  scale_color_viridis_c() +
+  annotation_scale(bar_cols = c("yellow", "white"),
+                   location = "bl") + ## to make a scalebar and place it bottom left (bl)
+  annotation_north_arrow(location = "tl") + ## to add a north pointing arrow
+  coord_sf(crs = 4326) ## telling r the coordinate system (crs) and default gps (4326)
+```
+

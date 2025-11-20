@@ -1,0 +1,96 @@
+---
+title: "Week 13: Tidy Tuesday 3"
+author: "SZR"
+format:
+  html:
+    toc: true
+    toc-location: right
+    toc-title: "Contents"
+    code-fold: true
+---
+
+
+# Load Libraries
+```{r}
+#| message: false
+
+library(speech)
+library(dplyr)
+library(stringr)
+library(purrr)
+library(av)
+```
+
+
+# Load Data and Cleaning
+
+This weeks Tidy Tuesday features every Sherlock Holmes book line for line. This week, I would like to generate a code that creates audio that reads "The Disappearance of Lady Frances Carfax" aloud to you. The **NEW SKILL** I learned is creating audio from code using the **speech** function. I also learned that working with audio is incredibly finicky.
+```{r}
+#| message: false
+
+tuesdata <- tidytuesdayR::tt_load(2025, week = 46)
+
+holmes <- tuesdata$holmes
+
+lady_frances <- holmes %>% ## selecting only this book to work with
+  filter(book == "The Disappearance of Lady Frances Carfax")
+
+LF_fulltext <- lady_frances$text %>% ## cleaning the data
+  discard(is.na) %>% ## removing NAs
+  str_trim() %>% ## removing spaces
+  discard(~ .x == "") %>% ## removing empty lines
+  paste(collapse = " ") ## collapsing into one string (instead of individual lines)
+```
+
+
+# Creating Narration
+```{r}
+#| message: false
+
+voice <- "Daniel" ## choosing the voice from list (in terminal: say -v '?')
+speed <- "100" ## reading speed
+
+## creating vectors for text, .aiff, and .mp3 files
+text_file  <- "lady_frances.txt" ## creating a .txt file helps with the "say" function for long strings of text
+aiff_file  <- "lady_frances.aiff" ## "say" can only output as .aiff
+mp3_file   <- "lady_frances.mp3" ## then we can use this to create an mp3 file
+
+if (!file.exists("lady_frances.mp3")) { ## reusing existing audio file instead of regenerating every time
+  
+  writeLines(LF_fulltext, text_file) ## actually writing the text file
+
+## creating the audio
+system2("say", c( ## using "say" to create AIFF (exclusively for Mac)
+  "-v", voice, ## setting the narrator chosen from earlier
+  "-r", speed, # setting the speed
+  "-o", aiff_file, ## generating the aiff file
+  "-f", text_file ## where to get the text from
+))
+
+## converting .aiff into .mp3 ("say" only generated .aiff files)
+av::av_audio_convert(aiff_file, mp3_file)
+}
+```
+
+
+![](https://i5.walmartimages.com/seo/The-Disappearance-of-Lady-Frances-Carfax-Illustrated-Paperback-9798695541168_1f9389f7-62a5-4502-95cf-c97d6403339f.60d8e72b0b394d5260769484da21f996.jpeg?odnHeight=573&odnWidth=573&odnBg=FFFFFF)
+
+Here is the mp3 file
+
+<audio controls>
+  <source src="lady_frances.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+
+## Notes for generating audio in Quarto from mp3
+
+```{r}
+#| message: false
+
+#<audio controls>   # generates control buttons
+#  <source src="lady_frances.mp3" type="audio/mpeg">    # calling the .mp3 file 
+#  Your browser does not support the audio element.   # this will be displayed if the audio file cannot be played on the viewers browser
+#</audio>   # what closes the function
+```
+
