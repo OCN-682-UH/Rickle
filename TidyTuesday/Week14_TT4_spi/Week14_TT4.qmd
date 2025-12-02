@@ -1,0 +1,107 @@
+---
+title: "Week 14 TT4"
+author: "SZR"
+format:
+  html:
+    toc: true
+    toc-location: right
+    toc-title: "Contents"
+    code-fold: true
+---
+
+## Load Libraries
+
+```{r}
+#| message: false
+
+library(dplyr)
+library(tidyverse)
+library(tidyr)
+library(heatmaply)
+
+```
+
+
+## Loading Data
+
+This week's data explores Statistical Performance Indicators to monitor statistical performances of countries. Truthfully, I don't fully understand what this data means but I will be attempting to compare between different regions via a **Radar plot**, which is the new skill I am learning this week.
+
+```{r}
+#| message: false
+
+tuesdata <- tidytuesdayR::tt_load(2025, week = 47)
+
+spi_indicators <- tuesdata$spi_indicators
+
+region_avgs <- spi_indicators %>% ## averaging SPI scores by region
+  group_by(region) %>%
+  summarise(
+    data_use_score = mean(data_use_score, na.rm = TRUE),
+    data_services_score = mean(data_services_score, na.rm = TRUE),
+    data_products_score = mean(data_products_score, na.rm = TRUE),
+    data_sources_score = mean(data_sources_score, na.rm = TRUE),
+    data_infrastructure_score = mean(data_infrastructure_score, na.rm = TRUE)
+  )
+
+```
+
+
+```{r}
+#| message: false
+#| fig.width: 9
+#| fig.height: 7
+
+
+region_long <- region_avgs %>% ## making data long
+  pivot_longer(
+    cols = -region,
+    names_to = "pillar",
+    values_to = "score"
+  ) %>%
+  mutate(
+    pillar = factor(
+      pillar,
+      levels = c(
+        "data_use_score",
+        "data_services_score",
+        "data_products_score",
+        "data_sources_score",
+        "data_infrastructure_score"
+      ),
+      labels = c( ## shortening labels
+        "Useage",
+        "Dervices",
+        "Products",
+        "Sources",
+        "Infrastructure"
+      )
+    )
+  )
+
+
+ggplot(region_long,
+       aes(x = pillar, y = score, group = 1)) +
+  geom_polygon(fill = "skyblue", alpha = 0.3,
+               color = "blue", linewidth = 0.7) +
+  geom_point(size = 2, color = "blue") +
+  coord_polar() + ## making plot circular
+  ylim(0, 100) + ## setting axis range
+  facet_wrap(~ region, ncol = 3) + ## fewer columns = bigger panels
+  labs(
+    title = "Average SPI Pillar Scores by Region",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    strip.text   = element_text(face = "bold", size = 11),
+    axis.text.x  = element_text(size = 9),
+    panel.grid.minor = element_blank(), ## removing gridlines
+    panel.grid.major.x = element_blank(), ## removing gridlines
+    plot.title   = element_text(
+      hjust = 0.5, face = "bold", size = 18
+    ),
+    panel.spacing = unit(1, "lines")
+  )
+```
+
