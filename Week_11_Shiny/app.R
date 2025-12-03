@@ -4,20 +4,18 @@
 #
 # Find out more about building applications with Shiny here:
 #
-#    https://shiny.posit.co/
-#
+
 #############################################################################
 
 ### Load Libraries
 library(shiny)
-library(dplyr)
-library(readr)
+library(tidyverse)
 library(DT)
 library(here)
-library(rsconnect)
+#library(rsconnect)
 
 ### Load Data
-ccz <- read_csv(here("Week_11", "Data", "ccz_target_cleaned.csv"))
+ccz <- read_csv(here("Data","ccz_target_cleaned.csv"))
 
 # Create the list of depth levels from your categorical depth column
 depth_levels <- ccz %>%
